@@ -1,0 +1,1 @@
+match 'workflows/projects', :controller => 'workflows', :action => 'projects', :via => [:get, :post]
