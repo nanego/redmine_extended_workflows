@@ -20,6 +20,7 @@ class WorkflowsController < ApplicationController
     end
 
     if @roles
+      @fields = (Project::CORE_FIELDS ).map {|field| [field, l("field_"+field.sub(/_id$/, ''))]}
       @custom_fields = CustomField.where(type: "ProjectCustomField" ).sort
       @custom_fields = group_projects_custom_fields_by_section(@custom_fields) if Redmine::Plugin.installed?(:redmine_custom_fields_sections)
       @permissions = WorkflowProject.rules_by_roles(@roles)
