@@ -4,7 +4,7 @@
 
 <div class="tabs">
   <ul>
-    <li><%= link_to l(:label_status_transitions), workflows_edit_path(:role_id => @roles, :tracker_id => @trackers), :class => 'selected' %></li>
+    <li><%= link_to l(:label_status_transitions), workflows_edit_path(:role_id => @roles, :tracker_id => @trackers) %></li>
     <li><%= link_to l(:label_fields_permissions), workflows_permissions_path(:role_id => @roles, :tracker_id => @trackers) %></li>
     <li><%= link_to l(:label_fields_projects), workflows_projects_path(:role_id => @roles), :class => 'selected' %></li>
   </ul>
@@ -14,7 +14,7 @@
 
 <%= form_tag({}, :method => 'get') do %>
 <p>
-  <label><%=l(:label_role)%>:
+  <label><%= l(:label_role) %>:
     <%= options_for_workflow_select 'role_id[]', Role.sorted.select(&:consider_workflow?), @roles, :id => 'role_id', :class => 'expandable' %>
     <span class="toggle-multiselect icon-only"></span>
   </label>
@@ -24,6 +24,8 @@
 
 <% if @roles %>
   <% role_size = (@roles.count)  + 1 %>
+  <% role_label = @roles.count == 1 ? l(:label_role) : l(:label_role_plural) %>
+
   <%= form_tag({}, :id => 'workflow_form' ) do %>
     <%= @roles.map {|role| hidden_field_tag 'role_id[]', role.id, :id => nil}.join.html_safe %>
     <div class="autoscroll">
@@ -32,11 +34,7 @@
           <tr>
             <th>
             </th>
-            <th colspan="<%= role_size %>"><%=l(:label_info_todo)%></th>
-          </tr>
-          <tr>
-            <td></td>
-            <td colspan="<%= role_size %>"><%=l(:label_info_todo)%></td>
+            <th colspan="<%= role_size %>"><%= role_label %></th>
           </tr>
           <tr>
             <td></td>
@@ -48,11 +46,30 @@
           </tr>
         </thead>
         <tbody>
+          <tr class="group open">
+            <td colspan="<%= role_size %>">
+              <span class="expander icon icon-expended" onclick="toggleRowGroup(this);">&nbsp;</span>
+              <%= l(:field_core_fields) %>
+            </td>
+          </tr>
+          <% @fields.each do |field, name| %>
+          <tr>
+            <td class="name">
+              <%= name %> <%= content_tag('span', '*', :class => 'required') if field_required?(field) %>
+            </td>
+            <% @roles.each do |role| %>
+              <td>
+                <%= field_permission_project_tag(@permissions, role, field, @roles) %>
+              </td>
+            <% end %>
+          </tr>
+          <% end %>
+
           <% if @custom_fields.any? %>
             <tr class="group open">
               <td colspan="<%= role_size %>">
                 <span class="expander icon icon-expended" onclick="toggleRowGroup(this);">&nbsp;</span>
-                <%= l(:field_core_fields) %>
+                <%= l(:label_custom_field_plural) %>
               </td>
             </tr>
 
