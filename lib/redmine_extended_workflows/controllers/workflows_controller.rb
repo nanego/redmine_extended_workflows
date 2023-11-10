@@ -8,9 +8,6 @@ class WorkflowsController < ApplicationController
 
     if request.post? && @roles && params[:permissions]
       permissions = params[:permissions].deep_dup
-      permissions.each do |field, rule_by_field_id|
-        rule_by_field_id.reject! {|field_id, rule| rule == 'no_change'}
-      end
 
       WorkflowProject.replace_permissions(@roles, permissions)
 

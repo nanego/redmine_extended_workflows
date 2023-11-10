@@ -28,6 +28,7 @@
   <% role_width = 75 / (@roles.size) %>
   <% role_style = @roles.count == 1 ? "float: left;" : "width:#{role_width}%;" %>
   <% th_role_style = @roles.count == 1 ? "float: left;width: 100%;text-align: left;" : "" %>
+
   <%= form_tag({}, :id => 'workflow_form' ) do %>
     <%= @roles.map {|role| hidden_field_tag 'role_id[]', role.id, :id => nil}.join.html_safe %>
     <div class="autoscroll">
@@ -77,7 +78,7 @@
 
             <% @custom_fields.each do |custom_field|
               back_url = custom_fields_path("ProjectCustomField") %>
-              <!--  This condition for sections if redmine_custom_fields_sections is installed-->
+              <!--  This condition for sections if redmine_custom_fields_sections is installed -->
               <% if custom_field.is_a?(Hash) %>
                 <tr class="section_custom_field" id="<%= custom_field[:name].parameterize %>">
                   <td  style="text-align: left;"><%= link_to custom_field[:name], edit_custom_fields_section_path(custom_field[:id]) %>
