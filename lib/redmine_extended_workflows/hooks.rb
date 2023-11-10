@@ -8,5 +8,12 @@ module RedmineExtendedWorkflows
         require_relative 'models/role'
       end
     end
+
+    class Hooks < Redmine::Hook::ViewListener
+      #adds our css on each page
+      def view_layouts_base_html_head(context)
+        stylesheet_link_tag("redmine_extended_workflows", :plugin => "redmine_extended_workflows")
+      end
+    end
   end
 end

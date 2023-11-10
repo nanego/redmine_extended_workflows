@@ -25,7 +25,9 @@
 <% if @roles %>
   <% role_size = (@roles.count)  + 1 %>
   <% role_label = @roles.count == 1 ? l(:label_role) : l(:label_role_plural) %>
-
+  <% role_width = 75 / (@roles.size) %>
+  <% role_style = @roles.count == 1 ? "float: left;" : "width:#{role_width}%;" %>
+  <% th_role_style = @roles.count == 1 ? "float: left;width: 100%;text-align: left;" : "" %>
   <%= form_tag({}, :id => 'workflow_form' ) do %>
     <%= @roles.map {|role| hidden_field_tag 'role_id[]', role.id, :id => nil}.join.html_safe %>
     <div class="autoscroll">
@@ -34,12 +36,12 @@
           <tr>
             <th>
             </th>
-            <th colspan="<%= role_size %>"><%= role_label %></th>
+            <th style="<%= th_role_style %>" colspan="<%= role_size %>"><%= role_label %></th>
           </tr>
           <tr>
             <td></td>
             <% for role in @roles %>
-            <td style="width:<%= 75 / @roles.size %>%;">
+            <td style="<%= role_style %>">
               <%= role.name %>
             </td>
             <% end %>
@@ -54,11 +56,11 @@
           </tr>
           <% @fields.each do |field, name| %>
           <tr>
-            <td class="name">
+            <td class="name" style="width:15%;">
               <%= name %> <%= content_tag('span', '*', :class => 'required') if field_required?(field) %>
             </td>
             <% @roles.each do |role| %>
-              <td>
+              <td style="<%= role_style %>">
                 <%= field_permission_project_tag(@permissions, role, field, @roles) %>
               </td>
             <% end %>
@@ -75,20 +77,20 @@
 
             <% @custom_fields.each do |custom_field|
               back_url = custom_fields_path("ProjectCustomField") %>
-
+              <!--  This condition for sections if redmine_custom_fields_sections is installed-->
               <% if custom_field.is_a?(Hash) %>
                 <tr class="section_custom_field" id="<%= custom_field[:name].parameterize %>">
                   <td  style="text-align: left;"><%= link_to custom_field[:name], edit_custom_fields_section_path(custom_field[:id]) %>
                     <% custom_field[:items].each do |item| %>
                       <br />
-                      <span class="name">
+                      <span class="name field-section">
                         <%= link_to item.name, edit_custom_field_path(item) %>
                       </span>
                     <% end %>
                   </td>
 
                   <% @roles.each do |role| %>
-                    <td style="width:<%= 75 / @roles.size %>%;">
+                    <td style="<%= role_style %>">
                       <% custom_field[:items].each do |item| %>
                         <br />
                         <%= field_permission_project_tag(@permissions, role, item, @roles) %>
@@ -105,7 +107,7 @@
                 <tr>
                   <td class="name"><%= link_to custom_field.name, edit_custom_field_path(custom_field) %></td>
                   <% @roles.each do |role| %>
-                    <td>
+                    <td style="<%= role_style %>">
                       <%= field_permission_project_tag(@permissions, role, custom_field, @roles) %>
                     </td>
                   <% end %>
