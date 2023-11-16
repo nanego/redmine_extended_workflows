@@ -16,7 +16,7 @@ describe WatchersController, type: :controller do
     @request.session[:user_id] = 1 # permissions admin
   end
 
-  describe "POST projects" do
+  describe "workflow projects" do
 
     let(:core_fields) { Project::CORE_FIELDS }
     let(:custom_fields) { CustomField.where(type: "ProjectCustomField" ) }
@@ -101,10 +101,10 @@ describe WatchersController, type: :controller do
         }
       end.to change { WorkflowProject.count }.by(6)
 
-      expect(WorkflowProject.where(:role_id => role_id_1, :field_name=> "name").first.rule).to eq("readonly")
-      expect(WorkflowProject.where(:role_id => role_id_2, :field_name=> "is_public").first.rule).to eq("readonly")
-      expect(WorkflowProject.where(:role_id => role_id_1, :field_name=> custom_field_id).first.rule).to eq("readonly")
-      expect(WorkflowProject.where(:role_id => role_id_2, :field_name=> custom_field_id).first.rule).to eq("readonly")
+      expect(WorkflowProject.where(:role_id => role_id_1, :field_name => "name").first.rule).to eq("readonly")
+      expect(WorkflowProject.where(:role_id => role_id_2, :field_name => "is_public").first.rule).to eq("readonly")
+      expect(WorkflowProject.where(:role_id => role_id_1, :field_name => custom_field_id).first.rule).to eq("readonly")
+      expect(WorkflowProject.where(:role_id => role_id_2, :field_name => custom_field_id).first.rule).to eq("readonly")
 
     end
 
