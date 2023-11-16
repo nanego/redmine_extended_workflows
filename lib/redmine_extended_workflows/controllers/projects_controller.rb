@@ -6,11 +6,20 @@ class ProjectsController < ApplicationController
   private
 
   def remove_read_only_attributes
+
     attributes = @project.read_only_attribute_names(User.current)
-    params_keys = params[:project].keys
+    all_params_keys = params[:project].keys
+
+    all_params_keys += params[:project][:custom_field_values].keys if params[:project][:custom_field_values].present?
+
     params[:project] = params[:project].except(*attributes)
+
+    params[:project][:custom_field_values] = params[:project][:custom_field_values].except(*attributes) if params[:project][:custom_field_values].present?
+
     allowed_fields_keys = params[:project].keys
-    @rejected_fields_keys = params_keys - allowed_fields_keys
+    allowed_fields_keys += params[:project][:custom_field_values].keys if params[:project][:custom_field_values].present?
+
+    @rejected_fields_keys = all_params_keys - allowed_fields_keys
   end
 
   # Renders a 200 response for partial successful updates
