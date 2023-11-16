@@ -15,7 +15,9 @@ class Project < ActiveRecord::Base
     return [] if user.nil?
 
     user_real = user || User.current
-    roles = user_real.admin ? Role.all.to_a : user_real.roles_for_project(project)
+    return [] if user_real.admin?
+
+    roles =  user_real.roles_for_project(project)
 
     return [] if roles.empty?
 
@@ -24,7 +26,16 @@ class Project < ActiveRecord::Base
         :rule => 'readonly', :role_id => roles.map(&:id)
       )
 
-    workflow_projects.map(&:field_name).uniq
+    workflow_projects_fields = workflow_projects.map(&:field_name)
+    read_only_attribute = []
+
+    # Include this field if it is set to read-only for all roles.
+    workflow_projects_fields.each do |field|
+      occurrences = workflow_projects_fields.count(field)
+      read_only_attribute <<  field if occurrences == roles.count
+    end
+
+    read_only_attribute.uniq
 
   end
 
