@@ -1,0 +1,5 @@
+api.array l(:label_rejected_fields) do
+  @messages.each do |message|
+    api.error message
+  end
+end
