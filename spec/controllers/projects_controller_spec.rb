@@ -171,6 +171,7 @@ describe ProjectsController, type: :controller do
       expect(project.name).to eq(name_test)
       expect(project.description).to eq(description_test)
       expect(project.custom_field_values.first.value).to eq(field_test)
+      request.headers['Authorization'] = ''
     end
   end
 end
