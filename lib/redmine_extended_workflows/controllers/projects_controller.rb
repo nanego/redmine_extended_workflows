@@ -22,9 +22,10 @@ class ProjectsController < ApplicationController
     @rejected_fields_keys = all_params_keys - allowed_fields_keys
   end
 
+  # Override this method only in the cas of update project instead of override method  project/update
   # Renders a 200 response for partial successful updates
   def render_api_ok
-    if @rejected_fields_keys.count > 0
+    if params[:action] == "update" &&  @rejected_fields_keys.count > 0
       @messages = @rejected_fields_keys
       render :template => 'common/rejected_fields_messages.api', :status => 200, :layout => nil
     else
