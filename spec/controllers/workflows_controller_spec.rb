@@ -35,7 +35,7 @@ describe WatchersController, type: :controller do
       end
 
       custom_fields.each do |field|
-        expect(response.body).to have_selector("a", text: field )
+        expect(response.body).to have_selector("a", text: field.name )
       end
     end
 
