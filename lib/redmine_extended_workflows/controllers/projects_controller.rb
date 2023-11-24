@@ -1,7 +1,10 @@
 require_dependency 'projects_controller'
 
-class ProjectsController < ApplicationController
-  append_before_action :remove_read_only_attributes, :only => [:update]
+module RedmineExtendedWorkflows::Controllers::ProjectsController
+
+  def self.prepended(base)
+    base.send(:append_before_action, :remove_read_only_attributes, :only => [:update])
+  end
 
   private
 
@@ -34,3 +37,5 @@ class ProjectsController < ApplicationController
   end
 
 end
+
+ProjectsController.prepend RedmineExtendedWorkflows::Controllers::ProjectsController

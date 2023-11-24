@@ -1,6 +1,7 @@
 require_dependency 'workflows_controller'
 
-class WorkflowsController < ApplicationController
+module RedmineExtendedWorkflows::Controllers::WorkflowsControllerConcern
+  extend ActiveSupport::Concern
 
   def projects
 
@@ -23,5 +24,8 @@ class WorkflowsController < ApplicationController
       @permissions = WorkflowProject.rules_by_roles(@roles)
     end
   end
+end
 
+class WorkflowsController < ApplicationController
+  include RedmineExtendedWorkflows::Controllers::WorkflowsControllerConcern
 end
