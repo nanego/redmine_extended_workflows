@@ -13,7 +13,8 @@ module RedmineExtendedWorkflows::Controllers::WorkflowsControllerConcern
       WorkflowProject.replace_permissions(@roles, permissions)
 
       flash[:notice] = l(:notice_successful_update)
-      redirect_to_referer_or workflows_permissions_path
+      redirect_to_referer_or if respond_to?(:workflows_permissions_path) # Redmine 4
+      redirect_to_referer_or if respond_to?(:permissions_workflows_path) # Redmine 5
       return
     end
 

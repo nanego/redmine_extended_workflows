@@ -1,11 +1,14 @@
 <%= render :partial => 'action_menu' %>
 
 <%= title l(:label_workflow) %>
+<%# Check Redmine version Redmine < 5 or Redmine >= 5 %>
+<% edit_path = respond_to?(:edit_workflows_path) ? :edit_workflows_path : :workflows_edit_path %>
+<% permissions_path = respond_to?(:permissions_workflows_path) ? :permissions_workflows_path : :workflows_permissions_path %>
 
 <div class="tabs">
   <ul>
-    <li><%= link_to l(:label_status_transitions), workflows_edit_path(:role_id => @roles, :tracker_id => @trackers) %></li>
-    <li><%= link_to l(:label_fields_permissions), workflows_permissions_path(:role_id => @roles, :tracker_id => @trackers) %></li>
+    <li><%= link_to l(:label_status_transitions), send(edit_path, :role_id => @roles, :tracker_id => @trackers) %></li>
+    <li><%= link_to l(:label_fields_permissions), send(permissions_path, :role_id => @roles, :tracker_id => @trackers) %></li>
     <li><%= link_to l(:label_fields_projects), workflows_projects_path(:role_id => @roles), :class => 'selected' %></li>
   </ul>
 </div>
