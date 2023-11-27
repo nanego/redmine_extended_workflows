@@ -1,6 +1,6 @@
 require_dependency 'workflows_helper'
 
-module PluginExtendedWorkflows
+module RedmineExtendedWorkflows::Helpers
   module WorkflowsHelper
     def field_permission_project_tag(permissions, role, field, roles)
 
@@ -29,5 +29,5 @@ module PluginExtendedWorkflows
   end
 end
 
-WorkflowsHelper.prepend PluginExtendedWorkflows::WorkflowsHelper
+WorkflowsHelper.prepend RedmineExtendedWorkflows::Helpers::WorkflowsHelper
 ActionView::Base.prepend WorkflowsHelper
