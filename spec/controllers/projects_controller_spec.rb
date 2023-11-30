@@ -4,7 +4,7 @@ describe ProjectsController, type: :controller do
 
   render_views
 
-  fixtures :projects, :users, :roles, :members, :member_roles , :custom_fields, :custom_values, :custom_fields_projects
+  fixtures :projects, :users, :roles, :members, :member_roles, :custom_fields, :custom_values, :custom_fields_projects
 
   include Redmine::I18n
 
@@ -18,13 +18,12 @@ describe ProjectsController, type: :controller do
 
   def setAuthorizationAPI(user, password = nil)
     Setting.rest_api_enabled = '1'
-    request.headers['Authorization'] =  ActionController::HttpAuthentication::Basic.encode_credentials(user, password || user)
+    request.headers['Authorization'] = ActionController::HttpAuthentication::Basic.encode_credentials(user, password || user)
   end
-
 
   describe "Update project" do
     let(:core_fields) { Project::CORE_FIELDS }
-    let(:custom_fields) { CustomField.where(type: "ProjectCustomField" ) }
+    let(:custom_fields) { CustomField.where(type: "ProjectCustomField") }
     let(:roles) { Role.sorted.select(&:consider_workflow?) }
     let(:project) { Project.find(1) }
     it "Should allow update all fields when user admin" do
@@ -36,7 +35,7 @@ describe ProjectsController, type: :controller do
       roles.each do |role|
         WorkflowProject.create(:role_id => role.id, :field_name => "name", :rule => 'readonly')
         WorkflowProject.create(:role_id => role.id, :field_name => "description", :rule => 'readonly')
-        WorkflowProject.create(:role_id => role.id, :field_name => "#{field_id}", :rule => 'readonly')
+        WorkflowProject.create(:role_id => role.id, :field_name => field_id.to_s, :rule => 'readonly')
       end
 
       name_test = "new_name"
@@ -44,8 +43,8 @@ describe ProjectsController, type: :controller do
       field_test = "Beta"
 
       patch :update, params: { id: project.id,
-                      project: { name: name_test, description: description_test, :custom_field_values => { "#{field_id}" => field_test } }
-                    }
+                               project: { name: name_test, description: description_test, :custom_field_values => { field_id.to_s => field_test } }
+      }
       project.reload
 
       expect(project.name).to eq(name_test)
@@ -59,15 +58,15 @@ describe ProjectsController, type: :controller do
       roles.each do |role|
         WorkflowProject.create(:role_id => role.id, :field_name => "name", :rule => 'readonly')
         WorkflowProject.create(:role_id => role.id, :field_name => "description", :rule => 'readonly')
-        WorkflowProject.create(:role_id => role.id, :field_name => "#{field_id}", :rule => 'readonly')
+        WorkflowProject.create(:role_id => role.id, :field_name => field_id.to_s, :rule => 'readonly')
       end
 
       name_test = "new_name"
       description_test = "new_description"
       field_test = "Beta"
       patch :update, params: { id: project.id,
-                      project: { name: name_test, description: description_test, :custom_field_values => { "#{field_id}" => field_test } }
-                    }
+                               project: { name: name_test, description: description_test, :custom_field_values => { field_id.to_s => field_test } }
+      }
       project.reload
 
       expect(project.name).to_not eq(name_test)
@@ -83,18 +82,18 @@ describe ProjectsController, type: :controller do
 
       WorkflowProject.create(:role_id => 1, :field_name => "name", :rule => 'readonly')
       WorkflowProject.create(:role_id => 1, :field_name => "description", :rule => 'readonly')
-      WorkflowProject.create(:role_id => 1, :field_name => "#{field_id}", :rule => 'readonly')
+      WorkflowProject.create(:role_id => 1, :field_name => field_id.to_s, :rule => 'readonly')
 
       WorkflowProject.create(:role_id => 2, :field_name => "description", :rule => 'readonly')
-      WorkflowProject.create(:role_id => 2, :field_name => "#{field_id}", :rule => 'readonly')
+      WorkflowProject.create(:role_id => 2, :field_name => field_id.to_s, :rule => 'readonly')
 
       name_test = "new_name"
       description_test = "new_description"
       field_test = "Beta"
 
       patch :update, params: { id: project.id,
-                      project: { name: name_test, description: description_test, :custom_field_values => { "#{field_id}" => field_test } }
-                    }
+                               project: { name: name_test, description: description_test, :custom_field_values => { field_id.to_s => field_test } }
+      }
       project.reload
 
       expect(project.name).to eq(name_test)
@@ -112,18 +111,18 @@ describe ProjectsController, type: :controller do
 
       WorkflowProject.create(:role_id => 1, :field_name => "name", :rule => 'readonly')
       WorkflowProject.create(:role_id => 1, :field_name => "description", :rule => 'readonly')
-      WorkflowProject.create(:role_id => 1, :field_name => "#{field_id}", :rule => 'readonly')
+      WorkflowProject.create(:role_id => 1, :field_name => field_id.to_s, :rule => 'readonly')
 
       WorkflowProject.create(:role_id => 2, :field_name => "description", :rule => 'readonly')
-      WorkflowProject.create(:role_id => 2, :field_name => "#{field_id}", :rule => 'readonly')
+      WorkflowProject.create(:role_id => 2, :field_name => field_id.to_s, :rule => 'readonly')
 
       name_test = "new_name"
       description_test = "new_description"
       field_test = "Beta"
 
       patch :update, params: { id: project.id,
-                      project: { name: name_test, description: description_test, :custom_field_values => { "#{field_id}" => field_test } }
-                    }
+                               project: { name: name_test, description: description_test, :custom_field_values => { field_id.to_s => field_test } }
+      }
       project.reload
 
       expect(project.name).to eq(name_test)
@@ -134,7 +133,7 @@ describe ProjectsController, type: :controller do
 
   describe "Update project by API" do
     let(:core_fields) { Project::CORE_FIELDS }
-    let(:custom_fields) { CustomField.where(type: "ProjectCustomField" ) }
+    let(:custom_fields) { CustomField.where(type: "ProjectCustomField") }
     let(:roles) { Role.sorted.select(&:consider_workflow?) }
     let(:project) { Project.find(1) }
 
@@ -147,10 +146,10 @@ describe ProjectsController, type: :controller do
 
       WorkflowProject.create(:role_id => 1, :field_name => "name", :rule => 'readonly')
       WorkflowProject.create(:role_id => 1, :field_name => "description", :rule => 'readonly')
-      WorkflowProject.create(:role_id => 1, :field_name => "#{field_id}", :rule => 'readonly')
+      WorkflowProject.create(:role_id => 1, :field_name => field_id.to_s, :rule => 'readonly')
 
       WorkflowProject.create(:role_id => 2, :field_name => "description", :rule => 'readonly')
-      WorkflowProject.create(:role_id => 2, :field_name => "#{field_id}", :rule => 'readonly')
+      WorkflowProject.create(:role_id => 2, :field_name => field_id.to_s, :rule => 'readonly')
 
       name_test = "new_name"
       description_test = "new_description"
@@ -158,7 +157,7 @@ describe ProjectsController, type: :controller do
 
       patch :update, params: {
         id: project.id,
-        project: { name: name_test, description: description_test, :custom_field_values => { "#{field_id}" => field_test } },
+        project: { name: name_test, description: description_test, :custom_field_values => { field_id.to_s => field_test } },
         format: :json,
       }
 
@@ -180,10 +179,10 @@ describe ProjectsController, type: :controller do
 
       WorkflowProject.create(:role_id => 1, :field_name => "name", :rule => 'readonly')
       WorkflowProject.create(:role_id => 1, :field_name => "description", :rule => 'readonly')
-      WorkflowProject.create(:role_id => 1, :field_name => "#{field_id}", :rule => 'readonly')
+      WorkflowProject.create(:role_id => 1, :field_name => field_id.to_s, :rule => 'readonly')
 
       WorkflowProject.create(:role_id => 2, :field_name => "description", :rule => 'readonly')
-      WorkflowProject.create(:role_id => 2, :field_name => "#{field_id}", :rule => 'readonly')
+      WorkflowProject.create(:role_id => 2, :field_name => field_id.to_s, :rule => 'readonly')
 
       name_test = "new_name"
       description_test = "new_description"
@@ -191,7 +190,7 @@ describe ProjectsController, type: :controller do
 
       patch :update, params: {
         id: project.id,
-        project: { name: name_test, description: description_test, :custom_field_values => { "#{field_id}" => field_test } },
+        project: { name: name_test, description: description_test, :custom_field_values => { field_id.to_s => field_test } },
         format: :json,
       }
 
@@ -211,7 +210,7 @@ describe ProjectsController, type: :controller do
       roles.each do |role|
         WorkflowProject.create(:role_id => role.id, :field_name => "name", :rule => 'readonly')
         WorkflowProject.create(:role_id => role.id, :field_name => "description", :rule => 'readonly')
-        WorkflowProject.create(:role_id => role.id, :field_name => "#{field_id}", :rule => 'readonly')
+        WorkflowProject.create(:role_id => role.id, :field_name => field_id.to_s, :rule => 'readonly')
       end
 
       name_test = "new_name"
@@ -219,8 +218,8 @@ describe ProjectsController, type: :controller do
       field_test = "Beta"
 
       patch :update, params: { id: project.id,
-                      project: { name: name_test, description: description_test, :custom_field_values => { "#{field_id}" => field_test } }
-                    }
+                               project: { name: name_test, description: description_test, :custom_field_values => { field_id.to_s => field_test } }
+      }
       project.reload
 
       expect(project.name).to eq(name_test)

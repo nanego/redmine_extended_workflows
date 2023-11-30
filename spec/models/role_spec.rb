@@ -5,7 +5,7 @@ describe "Role" do
   fixtures :custom_fields, :roles
 
   it "Update the table workflow_project in case of cascade deleting" do
-    custom_fields = CustomField.where(type: "ProjectCustomField" )
+    custom_fields = CustomField.where(type: "ProjectCustomField")
     role_test = Role.create!(:name => 'Test')
     role_test.add_permission! :add_issues
 

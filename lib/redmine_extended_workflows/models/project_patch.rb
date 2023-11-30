@@ -34,5 +34,5 @@ end
 Project.send(:include, RedmineExtendedWorkflows::Models::ProjectPatch)
 
 class Project < ActiveRecord::Base
-  CORE_FIELDS = %w(name description is_public parent_id inherit_members).freeze
+  CORE_FIELDS = %w(name description is_public parent_id inherit_members homepage).freeze
 end

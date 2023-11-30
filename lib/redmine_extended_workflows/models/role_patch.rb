@@ -1,5 +1,5 @@
 module RedmineExtendedWorkflows::Models
-  module  RolePatch
+  module RolePatch
     def self.included(base)
       base.class_eval do
         has_many :workflow_projects, :dependent => :destroy
@@ -11,4 +11,4 @@ module RedmineExtendedWorkflows::Models
     end
   end
 end
-Role.send(:include, RedmineExtendedWorkflows::Models:: RolePatch)
+Role.send(:include, RedmineExtendedWorkflows::Models::RolePatch)
