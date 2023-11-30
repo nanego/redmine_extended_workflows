@@ -1,3 +1,5 @@
+require 'workflows_controller' # only useful for Redmine < 5
+
 module RedmineExtendedWorkflows::Controllers::WorkflowsControllerConcern
   extend ActiveSupport::Concern
 
