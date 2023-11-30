@@ -5,8 +5,8 @@ module RedmineExtendedWorkflows
         require_relative 'controllers/workflows_controller_concern'
         require_relative 'controllers/projects_controller'
         require_relative 'helpers/workflows_helper'
-        require_relative 'models/project'
-        require_relative 'models/role'
+        require_relative 'models/project_patch'
+        require_relative 'models/role_patch'
         require_relative 'models/custom_field'
       end
     end

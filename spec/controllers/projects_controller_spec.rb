@@ -81,7 +81,6 @@ describe ProjectsController, type: :controller do
       member.roles << Role.find(2)
       member.save
 
-
       WorkflowProject.create(:role_id => 1, :field_name => "name", :rule => 'readonly')
       WorkflowProject.create(:role_id => 1, :field_name => "description", :rule => 'readonly')
       WorkflowProject.create(:role_id => 1, :field_name => "#{field_id}", :rule => 'readonly')
@@ -89,7 +88,34 @@ describe ProjectsController, type: :controller do
       WorkflowProject.create(:role_id => 2, :field_name => "description", :rule => 'readonly')
       WorkflowProject.create(:role_id => 2, :field_name => "#{field_id}", :rule => 'readonly')
 
+      name_test = "new_name"
+      description_test = "new_description"
+      field_test = "Beta"
 
+      patch :update, params: { id: project.id,
+                      project: { name: name_test, description: description_test, :custom_field_values => { "#{field_id}" => field_test } }
+                    }
+      project.reload
+
+      expect(project.name).to eq(name_test)
+      expect(project.description).to_not eq(description_test)
+      expect(project.custom_field_values.first.value).to_not eq(field_test)
+    end
+
+    it "Should reject all specified fields as read-only for all user roles when one of the roles is in excluded_workflow_roles" do
+      field_id = custom_fields.first.id
+      Role.create!(:name => 'Test') # role does not have the persmission update project
+      member = Member.find(1) # this member is with user_id 2 ,project_id1 ,and it has one role 1 manager.
+      member.roles << Role.find(2)
+      member.roles << Role.excluded_workflow_roles.last
+      member.save
+
+      WorkflowProject.create(:role_id => 1, :field_name => "name", :rule => 'readonly')
+      WorkflowProject.create(:role_id => 1, :field_name => "description", :rule => 'readonly')
+      WorkflowProject.create(:role_id => 1, :field_name => "#{field_id}", :rule => 'readonly')
+
+      WorkflowProject.create(:role_id => 2, :field_name => "description", :rule => 'readonly')
+      WorkflowProject.create(:role_id => 2, :field_name => "#{field_id}", :rule => 'readonly')
 
       name_test = "new_name"
       description_test = "new_description"
@@ -112,13 +138,12 @@ describe ProjectsController, type: :controller do
     let(:roles) { Role.sorted.select(&:consider_workflow?) }
     let(:project) { Project.find(1) }
 
-    it "Should modify fields that are not designated as read-only for one of the assigned role(s) of user api" do
+    it "Should modify fields that are not designated as read-only for one of the assigned role(s) of user" do
       setAuthorizationAPI('jsmith', 'jsmith')
       field_id = custom_fields.first.id
       member = Member.find(1) # this member is with user_id 2 ,project_id1 ,and it has one role 1 manager.
       member.roles << Role.find(2)
       member.save
-
 
       WorkflowProject.create(:role_id => 1, :field_name => "name", :rule => 'readonly')
       WorkflowProject.create(:role_id => 1, :field_name => "description", :rule => 'readonly')
@@ -127,11 +152,9 @@ describe ProjectsController, type: :controller do
       WorkflowProject.create(:role_id => 2, :field_name => "description", :rule => 'readonly')
       WorkflowProject.create(:role_id => 2, :field_name => "#{field_id}", :rule => 'readonly')
 
-
       name_test = "new_name"
       description_test = "new_description"
       field_test = "Beta"
-
 
       patch :update, params: {
         id: project.id,
@@ -139,6 +162,38 @@ describe ProjectsController, type: :controller do
         format: :json,
       }
 
+      project.reload
+
+      expect(project.name).to eq(name_test)
+      expect(project.description).to_not eq(description_test)
+      expect(project.custom_field_values.first.value).to_not eq(field_test)
+    end
+
+    it "Should reject all specified fields as read-only for all user roles when one of the roles is in excluded_workflow_roles" do
+      setAuthorizationAPI('jsmith', 'jsmith')
+      field_id = custom_fields.first.id
+      Role.create!(:name => 'Test') # role does not have the persmission update project
+      member = Member.find(1) # this member is with user_id 2 ,project_id1 ,and it has one role 1 manager.
+      member.roles << Role.find(2)
+      member.roles << Role.excluded_workflow_roles.last
+      member.save
+
+      WorkflowProject.create(:role_id => 1, :field_name => "name", :rule => 'readonly')
+      WorkflowProject.create(:role_id => 1, :field_name => "description", :rule => 'readonly')
+      WorkflowProject.create(:role_id => 1, :field_name => "#{field_id}", :rule => 'readonly')
+
+      WorkflowProject.create(:role_id => 2, :field_name => "description", :rule => 'readonly')
+      WorkflowProject.create(:role_id => 2, :field_name => "#{field_id}", :rule => 'readonly')
+
+      name_test = "new_name"
+      description_test = "new_description"
+      field_test = "Beta"
+
+      patch :update, params: {
+        id: project.id,
+        project: { name: name_test, description: description_test, :custom_field_values => { "#{field_id}" => field_test } },
+        format: :json,
+      }
 
       project.reload
 
