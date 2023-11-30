@@ -1,5 +1,3 @@
-require_dependency 'workflows_helper'
-
 module RedmineExtendedWorkflows::Helpers
   module WorkflowsHelper
     def field_permission_project_tag(permissions, role, field, roles)

@@ -1,5 +1,3 @@
-require_dependency 'project'
-
 module RedmineExtendedWorkflows::Models
   module ProjectPatch
     def self.included(base)

@@ -1,5 +1,3 @@
-require_dependency 'workflows_controller'
-
 module RedmineExtendedWorkflows::Controllers::WorkflowsControllerConcern
   extend ActiveSupport::Concern
 

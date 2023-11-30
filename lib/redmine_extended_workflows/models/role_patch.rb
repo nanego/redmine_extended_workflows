@@ -1,5 +1,3 @@
-require_dependency 'role'
-
 module RedmineExtendedWorkflows::Models
   module  RolePatch
     def self.included(base)

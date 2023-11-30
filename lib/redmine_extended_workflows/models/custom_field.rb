@@ -1,5 +1,3 @@
-require_dependency 'custom_field'
-
 module RedmineExtendedWorkflows::Models
   module CustomField
     def self.included(base)

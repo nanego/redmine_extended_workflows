@@ -1,5 +1,3 @@
-require_dependency 'projects_controller'
-
 module RedmineExtendedWorkflows::Controllers::ProjectsController
 
   def self.prepended(base)
