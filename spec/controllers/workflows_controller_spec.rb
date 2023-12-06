@@ -20,7 +20,7 @@ describe WatchersController, type: :controller do
 
     let(:core_fields) { Project::CORE_FIELDS }
     let(:custom_fields) { CustomField.where(type: "ProjectCustomField") }
-    let(:roles) { Role.sorted.select(&:consider_workflow?) }
+    let(:roles) { Role.sorted.select(&:workflow_project_roles?) }
 
     it "Should return a successful response for new tab projects" do
       get :projects

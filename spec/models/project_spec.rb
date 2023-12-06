@@ -64,14 +64,14 @@ describe "Project" do
       expect(read_only_fields).to_not include("name")
     end
 
-    it "Should return all designated fields (as read-only) for all user roles when one of the roles is in excluded_workflow_roles" do
+    it "Should return all designated fields (as read-only) for all user roles when one of the roles is not in workflow_project_roles" do
       user = User.find(2)
       field_id = custom_fields.first.id
       Role.create!(:name => 'Test') # role does not have the persmission update project
 
       member = Member.find(1) # this member is with user_id 2 ,project_id1 ,and it has one role 1 manager.
       member.roles << Role.find(2)
-      member.roles << Role.excluded_workflow_roles.last
+      member.roles << Role.last
       member.save
 
       WorkflowProject.create(:role_id => 1, :field_name => "name", :rule => 'readonly')

@@ -16,4 +16,13 @@ describe "Role" do
       role_test.destroy
     end.to change { WorkflowProject.count }.by(-2)
   end
+
+  it "Should return the roles which have the permission edit_project" do
+    Role.create!(:name => 'Test')
+    roles = Role.select(&:workflow_project_roles?)
+    roles.each do |role|
+      expect(role.has_permission?(:edit_project)).to be_truthy
+    end
+    expect(roles).not_to include(Role.last)
+  end
 end

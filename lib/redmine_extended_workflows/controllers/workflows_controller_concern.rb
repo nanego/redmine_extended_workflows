@@ -4,7 +4,7 @@ module RedmineExtendedWorkflows::Controllers::WorkflowsControllerConcern
   extend ActiveSupport::Concern
 
   def projects
-    find_roles
+    find_update_project_roles
 
     if request.post? && @roles && params[:permissions]
       permissions = params[:permissions].deep_dup
@@ -22,6 +22,18 @@ module RedmineExtendedWorkflows::Controllers::WorkflowsControllerConcern
       @custom_fields = group_projects_custom_fields_by_section(@custom_fields) if Redmine::Plugin.installed?(:redmine_custom_fields_sections)
       @permissions = WorkflowProject.rules_by_roles(@roles)
     end
+  end
+
+  private 
+
+  def find_update_project_roles
+    ids = Array.wrap(params[:role_id])
+    if ids == ['all']
+      @roles = Role.sorted.select(&:workflow_project_roles?)
+    elsif ids.present?
+      @roles = Role.where(:id => ids).to_a
+    end
+    @roles = nil if @roles.blank?
   end
 end
 

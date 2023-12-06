@@ -24,7 +24,7 @@ describe ProjectsController, type: :controller do
   describe "Update project" do
     let(:core_fields) { Project::CORE_FIELDS }
     let(:custom_fields) { CustomField.where(type: "ProjectCustomField") }
-    let(:roles) { Role.sorted.select(&:consider_workflow?) }
+    let(:roles) { Role.sorted.select(&:workflow_project_roles?) }
     let(:project) { Project.find(1) }
     it "Should allow update all fields when user admin" do
       admin = User.find(1)
@@ -76,16 +76,17 @@ describe ProjectsController, type: :controller do
 
     it "Should modify fields that are not designated as read-only for one of the assigned role(s) of user" do
       field_id = custom_fields.first.id
+      role_2 = roles.second
       member = Member.find(1) # this member is with user_id 2 ,project_id1 ,and it has one role 1 manager.
-      member.roles << Role.find(2)
+      member.roles << role_2 #id=2
       member.save
 
       WorkflowProject.create(:role_id => 1, :field_name => "name", :rule => 'readonly')
       WorkflowProject.create(:role_id => 1, :field_name => "description", :rule => 'readonly')
       WorkflowProject.create(:role_id => 1, :field_name => field_id.to_s, :rule => 'readonly')
 
-      WorkflowProject.create(:role_id => 2, :field_name => "description", :rule => 'readonly')
-      WorkflowProject.create(:role_id => 2, :field_name => field_id.to_s, :rule => 'readonly')
+      WorkflowProject.create(:role_id => role_2.id, :field_name => "description", :rule => 'readonly')
+      WorkflowProject.create(:role_id => role_2.id, :field_name => field_id.to_s, :rule => 'readonly')
 
       name_test = "new_name"
       description_test = "new_description"
@@ -101,20 +102,21 @@ describe ProjectsController, type: :controller do
       expect(project.custom_field_values.first.value).to_not eq(field_test)
     end
 
-    it "Should reject all specified fields as read-only for all user roles when one of the roles is in excluded_workflow_roles" do
+    it "Should reject all specified fields as read-only for all user roles when he has a role is not in workflow_project_roles" do
       field_id = custom_fields.first.id
+      role_2 = roles.second
       Role.create!(:name => 'Test') # role does not have the persmission update project
       member = Member.find(1) # this member is with user_id 2 ,project_id1 ,and it has one role 1 manager.
-      member.roles << Role.find(2)
-      member.roles << Role.excluded_workflow_roles.last
+      member.roles << role_2
+      member.roles << Role.last #not in workflow_project_roles
       member.save
 
       WorkflowProject.create(:role_id => 1, :field_name => "name", :rule => 'readonly')
       WorkflowProject.create(:role_id => 1, :field_name => "description", :rule => 'readonly')
       WorkflowProject.create(:role_id => 1, :field_name => field_id.to_s, :rule => 'readonly')
 
-      WorkflowProject.create(:role_id => 2, :field_name => "description", :rule => 'readonly')
-      WorkflowProject.create(:role_id => 2, :field_name => field_id.to_s, :rule => 'readonly')
+      WorkflowProject.create(:role_id => role_2.id, :field_name => "description", :rule => 'readonly')
+      WorkflowProject.create(:role_id => role_2.id, :field_name => field_id.to_s, :rule => 'readonly')
 
       name_test = "new_name"
       description_test = "new_description"
@@ -134,22 +136,23 @@ describe ProjectsController, type: :controller do
   describe "Update project by API" do
     let(:core_fields) { Project::CORE_FIELDS }
     let(:custom_fields) { CustomField.where(type: "ProjectCustomField") }
-    let(:roles) { Role.sorted.select(&:consider_workflow?) }
+    let(:roles) { Role.sorted.select(&:workflow_project_roles?) }
     let(:project) { Project.find(1) }
 
     it "Should modify fields that are not designated as read-only for one of the assigned role(s) of user" do
       setAuthorizationAPI('jsmith', 'jsmith')
       field_id = custom_fields.first.id
+      role_2 = roles.second
       member = Member.find(1) # this member is with user_id 2 ,project_id1 ,and it has one role 1 manager.
-      member.roles << Role.find(2)
+      member.roles << role_2
       member.save
 
       WorkflowProject.create(:role_id => 1, :field_name => "name", :rule => 'readonly')
       WorkflowProject.create(:role_id => 1, :field_name => "description", :rule => 'readonly')
       WorkflowProject.create(:role_id => 1, :field_name => field_id.to_s, :rule => 'readonly')
 
-      WorkflowProject.create(:role_id => 2, :field_name => "description", :rule => 'readonly')
-      WorkflowProject.create(:role_id => 2, :field_name => field_id.to_s, :rule => 'readonly')
+      WorkflowProject.create(:role_id => role_2.id, :field_name => "description", :rule => 'readonly')
+      WorkflowProject.create(:role_id => role_2.id, :field_name => field_id.to_s, :rule => 'readonly')
 
       name_test = "new_name"
       description_test = "new_description"
@@ -168,21 +171,22 @@ describe ProjectsController, type: :controller do
       expect(project.custom_field_values.first.value).to_not eq(field_test)
     end
 
-    it "Should reject all specified fields as read-only for all user roles when one of the roles is in excluded_workflow_roles" do
+    it "Should reject all specified fields as read-only for all user roles when he has a role is not in workflow_project_roles" do
       setAuthorizationAPI('jsmith', 'jsmith')
       field_id = custom_fields.first.id
+      role_2 = roles.second
       Role.create!(:name => 'Test') # role does not have the persmission update project
       member = Member.find(1) # this member is with user_id 2 ,project_id1 ,and it has one role 1 manager.
-      member.roles << Role.find(2)
-      member.roles << Role.excluded_workflow_roles.last
+      member.roles << role_2
+      member.roles << Role.last # not in workflow_project_roles
       member.save
 
       WorkflowProject.create(:role_id => 1, :field_name => "name", :rule => 'readonly')
       WorkflowProject.create(:role_id => 1, :field_name => "description", :rule => 'readonly')
       WorkflowProject.create(:role_id => 1, :field_name => field_id.to_s, :rule => 'readonly')
 
-      WorkflowProject.create(:role_id => 2, :field_name => "description", :rule => 'readonly')
-      WorkflowProject.create(:role_id => 2, :field_name => field_id.to_s, :rule => 'readonly')
+      WorkflowProject.create(:role_id => role_2.id, :field_name => "description", :rule => 'readonly')
+      WorkflowProject.create(:role_id => role_2.id, :field_name => field_id.to_s, :rule => 'readonly')
 
       name_test = "new_name"
       description_test = "new_description"

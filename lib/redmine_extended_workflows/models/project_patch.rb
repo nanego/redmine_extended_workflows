@@ -16,8 +16,8 @@ module RedmineExtendedWorkflows::Models
         end
 
         def self.get_read_only_attribute_for_roles(roles)
-          # Handle cases where roles lack permission to perform update/project.
-          workflow_roles_user = roles - Role.excluded_workflow_roles
+
+          workflow_roles_user = roles & Role.sorted.select(&:workflow_project_roles?)
 
           WorkflowProject.where(role: workflow_roles_user,
                                 rule: 'readonly')
