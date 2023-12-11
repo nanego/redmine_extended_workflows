@@ -4,8 +4,8 @@ describe "Role" do
 
   fixtures :custom_fields, :roles
 
-  it "Update the table workflow_project in case of cascade deleting" do
-    custom_fields = CustomField.where(type: "ProjectCustomField")
+  it "updates the table workflow_project in case of cascade deleting" do
+    custom_fields = ProjectCustomField.all
     role_test = Role.create!(:name => 'Test')
     role_test.add_permission! :add_issues
 
@@ -17,12 +17,12 @@ describe "Role" do
     end.to change { WorkflowProject.count }.by(-2)
   end
 
-  it "Should return the roles which have the permission edit_project" do
-    Role.create!(:name => 'Test')
-    roles = Role.select(&:workflow_project_roles?)
+  it "returns the roles which have the permission edit_project" do
+    role_without_permission = Role.create!(:name => 'Test')
+    roles = Role.workflow_project_roles
     roles.each do |role|
       expect(role.has_permission?(:edit_project)).to be_truthy
     end
-    expect(roles).not_to include(Role.last)
+    expect(roles).not_to include(role_without_permission)
   end
 end

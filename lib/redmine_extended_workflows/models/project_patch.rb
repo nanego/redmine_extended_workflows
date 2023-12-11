@@ -15,15 +15,13 @@ module RedmineExtendedWorkflows::Models
           Project.get_read_only_attribute_for_roles(user.roles_for_project(self))
         end
 
-        def self.get_read_only_attribute_for_roles(roles)
-
-          workflow_roles_user = roles & Role.sorted.select(&:workflow_project_roles?)
-
+        def self.get_read_only_attribute_for_roles(user_roles)
+          workflow_roles_user = user_roles & Role.workflow_project_roles
           WorkflowProject.where(role: workflow_roles_user,
                                 rule: 'readonly')
                          .pluck(:field_name)
                          .group_by { |field_name| field_name }
-                         .reject { |k, group| group.length != workflow_roles_user.size }
+                         .select { |k, group| group.length == workflow_roles_user.size }
                          .keys
         end
 

@@ -7,24 +7,24 @@ module RedmineExtendedWorkflows::Controllers::ProjectsController
   private
 
   def remove_read_only_attributes
-    attributes = @project.read_only_attribute_names(User.current)
+    read_only_attributes = @project.read_only_attribute_names(User.current)
 
     all_params_keys = params[:project].keys
     all_params_keys += params[:project][:custom_field_values].keys if params[:project][:custom_field_values].present?
 
     # Remove read only attributes from params
-    params[:project] = params[:project].except(*attributes)
-    params[:project][:custom_field_values] = params[:project][:custom_field_values].except(*attributes) if params[:project][:custom_field_values].present?
+    params[:project] = params[:project].except(*read_only_attributes)
+    params[:project][:custom_field_values] = params[:project][:custom_field_values].except(*read_only_attributes) if params[:project][:custom_field_values].present?
 
     allowed_fields_keys = params[:project].keys
     allowed_fields_keys += params[:project][:custom_field_values].keys if params[:project][:custom_field_values].present?
     @rejected_fields_keys = all_params_keys - allowed_fields_keys
   end
 
-  # Override this method only in the cas of update project instead of override method  project/update
+  # Override this method only in the case of update project instead of override method project/update
   # Renders a 200 response for partial successful updates
   def render_api_ok
-    if params[:action] == "update" && @rejected_fields_keys.size > 0
+    if params[:action] == "update" && @rejected_fields_keys.present?
       @messages = @rejected_fields_keys
       render :template => 'common/rejected_fields_messages.api', :status => 200, :layout => nil
     else

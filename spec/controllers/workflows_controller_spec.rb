@@ -19,15 +19,15 @@ describe WatchersController, type: :controller do
   describe "workflow projects" do
 
     let(:core_fields) { Project::CORE_FIELDS }
-    let(:custom_fields) { CustomField.where(type: "ProjectCustomField") }
-    let(:roles) { Role.sorted.select(&:workflow_project_roles?) }
+    let(:custom_fields) { ProjectCustomField.all }
+    let(:roles) { Role.workflow_project_roles }
 
-    it "Should return a successful response for new tab projects" do
+    it "returns a successful response for new tab projects" do
       get :projects
       expect(response).to have_http_status(:success)
     end
 
-    it "Should display all core and custom fields of project" do
+    it "displays all core and custom fields of project" do
       get :projects, :params => { role_id: 'all' }
 
       core_fields.each do |field|
@@ -39,8 +39,7 @@ describe WatchersController, type: :controller do
       end
     end
 
-    it "Should display all roles when all roles are selected" do
-
+    it "displays all roles when all roles are selected" do
       get :projects, :params => { role_id: 'all' }
 
       expect(response).to have_http_status(:success)
@@ -56,10 +55,9 @@ describe WatchersController, type: :controller do
           expect(response.body).to have_selector("select[name='permissions[#{role.id}][#{field.id}]']")
         end
       end
-
     end
 
-    it "Should display one role when it is selected" do
+    it "displays one role when one is selected" do
       role_id = roles.first.id
       get :projects, :params => { role_id: role_id }
 
@@ -105,7 +103,6 @@ describe WatchersController, type: :controller do
       expect(WorkflowProject.where(:role_id => role_id_2, :field_name => "is_public").first.rule).to eq("readonly")
       expect(WorkflowProject.where(:role_id => role_id_1, :field_name => custom_field_id).first.rule).to eq("readonly")
       expect(WorkflowProject.where(:role_id => role_id_2, :field_name => custom_field_id).first.rule).to eq("readonly")
-
     end
 
   end
