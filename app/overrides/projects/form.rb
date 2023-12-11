@@ -9,7 +9,10 @@ Deface::Override.new :virtual_path  => 'projects/_form',
     for (const attribute of attribute_names.split(",")) {
       let element = document.querySelector(`#project_${attribute}`) ||
           document.querySelector(`#project_custom_field_values_${attribute}`) ||
-          document.querySelectorAll(`input[name="project[custom_field_values][${attribute}][]"`);
+          (document.querySelectorAll(`input[name="project[custom_field_values][${attribute}][]"`).length > 0 ? 
+          document.querySelectorAll(`input[name="project[custom_field_values][${attribute}][]"`) :
+          document.querySelectorAll(`input[name="project[custom_field_values][${attribute}]"`) );
+     
       if (element !== null) {
         // Check if obj is an HTML element
         if (element instanceof Element){
