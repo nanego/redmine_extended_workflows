@@ -4,7 +4,6 @@ module RedmineExtendedWorkflows::Helpers
     def field_permission_project_tag(permissions, role, field, roles)
       name = field.is_a?(CustomField) ? field.id.to_s : field
       options = [["", ""], [l(:label_readonly), "readonly"]]
-      html_options = {}
 
       if permissions.present? && permissions[role.id].present?
         if perm = permissions[role.id][name]
@@ -12,17 +11,7 @@ module RedmineExtendedWorkflows::Helpers
         end
       end
 
-      hidden = field.is_a?(CustomField) &&
-        !field.visible? &&
-        !roles.detect { |role| role.custom_fields.to_a.include?(field) }
-
-      if hidden
-        options[0][0] = l(:label_hidden)
-        selected = ''
-        html_options[:disabled] = true
-      end
-
-      select_tag("permissions[#{role.id}][#{name}]", options_for_select(options, selected), html_options)
+      select_tag("permissions[#{role.id}][#{name}]", options_for_select(options, selected))
     end
   end
 end
