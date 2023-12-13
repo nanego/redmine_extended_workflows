@@ -82,25 +82,22 @@
             <!--  This condition for sections if redmine_custom_fields_sections is installed -->
             <% if custom_field.is_a?(Hash) %>
               <tr class="section_custom_field" id="<%= custom_field[:name].parameterize %>">
-                <td style="text-align: left;"><%= link_to custom_field[:name], edit_custom_fields_section_path(custom_field[:id]) %>
-                  <% custom_field[:items].each do |item| %>
-                    <br/>
-                    <span class="name field-section">
-                        <%= link_to item.name, edit_custom_field_path(item) %>
-                      </span>
-                  <% end %>
-                </td>
-
-                <% @roles.each do |role| %>
-                  <td style="<%= role_style %>">
-                    <% custom_field[:items].each do |item| %>
-                      <br/>
-                      <%= field_permission_project_tag(@permissions, role, item, @roles) %>
-                    <% end %>
-                  </td>
-                <% end %>
-
+                <td style="text-align: left;" colspan="<%= role_size %>"><%= link_to custom_field[:name], edit_custom_fields_section_path(custom_field[:id]) %>
               </tr>
+              <% custom_field[:items].each do |item| %>
+                <tr class="section_custom_field">
+                  <td style="text-align: left;">
+                    <span class="name field-section">
+                      <%= link_to item.name, edit_custom_field_path(item) %>
+                    </span>
+                  </td>
+                  <% @roles.each do |role| %>
+                    <td style="<%= role_style %>">
+                      <%= field_permission_project_tag(@permissions, role, item, @roles) %>
+                    </td>
+                  <% end %>
+                </tr>
+              <% end %>
               <% custom_field[:items].each_with_index do |item, i|
                 next if i == 0 %>
                 <tr class="section_item_invisible <%= custom_field[:name].parameterize %>"></tr>
