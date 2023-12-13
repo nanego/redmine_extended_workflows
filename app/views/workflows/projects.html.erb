@@ -52,13 +52,16 @@
         </thead>
         <tbody>
         <tr class="group open">
-          <td colspan="<%= role_size %>">
+          <td>
             <span class="expander icon icon-expended" onclick="toggleRowGroup(this);">&nbsp;</span>
             <%= l(:field_core_fields) %>
           </td>
+          <td colspan="<%= (role_size - 1) %>">
+            <%= select_option_for_all_links "core_field", 'permissions', "readonly", l(:label_readonly_all) %>
+          </td>
         </tr>
         <% @fields.each do |field, name| %>
-          <tr>
+          <tr class="core_field">
             <td class="name" style="width:15%;">
               <%= name %> <%= content_tag('span', '*', :class => 'required') if field_required?(field) %>
             </td>
@@ -72,9 +75,12 @@
 
         <% if @custom_fields.any? %>
           <tr class="group open">
-            <td colspan="<%= role_size %>">
+            <td>
               <span class="expander icon icon-expended" onclick="toggleRowGroup(this);">&nbsp;</span>
               <%= l(:label_custom_field_plural) %>
+            </td>
+            <td colspan="<%= (role_size - 1) %>">
+              <%= select_option_for_all_links "custom_field" , 'permissions', "readonly", l(:label_readonly_all) %>
             </td>
           </tr>
 
@@ -85,7 +91,7 @@
                 <td style="text-align: left;" colspan="<%= role_size %>"><%= link_to custom_field[:name], edit_custom_fields_section_path(custom_field[:id]) %>
               </tr>
               <% custom_field[:items].each do |item| %>
-                <tr class="section_custom_field">
+                <tr class="section_custom_field custom_field">
                   <td style="text-align: left;">
                     <span class="name field-section">
                       <%= link_to item.name, edit_custom_field_path(item) %>
@@ -103,7 +109,7 @@
                 <tr class="section_item_invisible <%= custom_field[:name].parameterize %>"></tr>
               <% end %>
             <% else %>
-              <tr>
+              <tr class="custom_field">
                 <td class="name"><%= link_to custom_field.name, edit_custom_field_path(custom_field) %></td>
                 <% @roles.each do |role| %>
                   <td style="<%= role_style %>">

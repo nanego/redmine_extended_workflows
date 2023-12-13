@@ -2,3 +2,5 @@ en:
   label_fields_projects: Permissions on project fields
   text_workflow_project_edit: Select a role to edit the workflow
   label_rejected_fields: Rejected_fields
+  button_none: No read-only fields
+  button_all: Set All readonly

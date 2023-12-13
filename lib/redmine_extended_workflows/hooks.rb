@@ -14,7 +14,8 @@ module RedmineExtendedWorkflows
     class Hooks < Redmine::Hook::ViewListener
       # adds our css on each page
       def view_layouts_base_html_head(context)
-        stylesheet_link_tag("redmine_extended_workflows", :plugin => "redmine_extended_workflows")
+        stylesheet_link_tag("redmine_extended_workflows", :plugin => "redmine_extended_workflows") +
+          javascript_include_tag("redmine_extended_workflows", :plugin => "redmine_extended_workflows")
       end
     end
   end

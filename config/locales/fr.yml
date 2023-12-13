@@ -2,3 +2,5 @@ fr:
   label_fields_projects: Permissions sur les champs des projets
   text_workflow_project_edit: Sélectionner un rôle pour éditer le workflow
   label_rejected_fields: Champs rejetés
+  button_none: Aucun champ en lecture seule
+  button_all: Tout passer en lecture seule
