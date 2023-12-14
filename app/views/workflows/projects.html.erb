@@ -57,7 +57,7 @@
             <%= l(:field_core_fields) %>
           </td>
           <td colspan="<%= (role_size - 1) %>">
-            <%= select_option_for_all_links "core_field", 'permissions', "readonly", l(:label_readonly_all) %>
+            <%= select_option_for_all_links ".core_field", 'permissions', "readonly", l(:label_readonly_all) %>
           </td>
         </tr>
         <% @fields.each do |field, name| %>
@@ -80,7 +80,7 @@
               <%= l(:label_custom_field_plural) %>
             </td>
             <td colspan="<%= (role_size - 1) %>">
-              <%= select_option_for_all_links "custom_field" , 'permissions', "readonly", l(:label_readonly_all) %>
+              <%= select_option_for_all_links ".custom_field" , 'permissions', "readonly", l(:label_readonly_all) %>
             </td>
           </tr>
 
