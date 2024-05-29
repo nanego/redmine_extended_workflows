@@ -26,9 +26,9 @@
 <% end %>
 
 <% if @roles %>
-  <% role_size = (@roles.size) + 1 %>
+  <% role_size = @roles.size + 1 %>
   <% role_label = @roles.size == 1 ? l(:label_role) : l(:label_role_plural) %>
-  <% role_width = 75 / (@roles.size) %>
+  <% role_width = 75 / @roles.size %>
   <% role_style = @roles.size == 1 ? "float: left;" : "width:#{role_width}%;" %>
   <% th_role_style = @roles.size == 1 ? "float: left;width: 100%;text-align: left;" : "" %>
 
@@ -80,7 +80,7 @@
               <%= l(:label_custom_field_plural) %>
             </td>
             <td colspan="<%= (role_size - 1) %>">
-              <%= select_option_for_all_links ".custom_field" , 'permissions', "readonly", l(:label_readonly_all) %>
+              <%= select_option_for_all_links ".custom_field", 'permissions', "readonly", l(:label_readonly_all) %>
             </td>
           </tr>
 
