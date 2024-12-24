@@ -13,6 +13,7 @@ describe WatchersController, type: :controller do
     @response = ActionDispatch::TestResponse.new
     Setting.default_language = 'en'
     User.current = nil
+    @request.session = ActionController::TestSession.new
     @request.session[:user_id] = 1 # permissions admin
   end
 

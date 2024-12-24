@@ -31,6 +31,6 @@ module RedmineExtendedWorkflows::Models
 end
 Project.send(:include, RedmineExtendedWorkflows::Models::ProjectPatch)
 
-class Project < ActiveRecord::Base
+class Project
   CORE_FIELDS = %w(name description is_public parent_id inherit_members homepage).freeze
 end

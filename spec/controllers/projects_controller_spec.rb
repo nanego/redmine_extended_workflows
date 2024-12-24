@@ -9,10 +9,8 @@ describe ProjectsController, type: :controller do
   include Redmine::I18n
 
   before do
-    @controller = ProjectsController.new
-    @request = ActionDispatch::TestRequest.create
-    @response = ActionDispatch::TestResponse.new
     User.current = nil
+    @request.session = ActionController::TestSession.new
     @request.session[:user_id] = 2 # permissions are hard
   end
 

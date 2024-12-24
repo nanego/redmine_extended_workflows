@@ -1,8 +1,8 @@
-name: Tests 5.1.2
+name: Tests 5.1.5
 
 env:
   PLUGIN_NAME: redmine_extended_workflows
-  REDMINE_VERSION: 5.1.2
+  REDMINE_VERSION: 5.1.5
   RAILS_ENV: test
 
 on:
