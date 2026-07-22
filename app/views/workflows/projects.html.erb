@@ -19,7 +19,7 @@
   <p>
     <label><%= l(:label_role) %>:
       <%= options_for_workflow_select 'role_id[]', Role.workflow_project_roles, @roles, :id => 'role_id', :class => 'expandable' %>
-      <span class="toggle-multiselect icon-only"></span>
+      <span class="toggle-multiselect icon-only"><%= sprite_icon('') %></span>
     </label>
     <%= submit_tag l(:button_edit), :name => nil %>
   </p>
@@ -53,7 +53,7 @@
         <tbody>
         <tr class="group open">
           <td>
-            <span class="expander icon icon-expended" onclick="toggleRowGroup(this);">&nbsp;</span>
+            <span class="expander icon icon-expanded" onclick="toggleRowGroup(this);"><%= sprite_icon("angle-down") %></span>
             <%= l(:field_core_fields) %>
           </td>
           <td colspan="<%= (role_size - 1) %>">
@@ -76,7 +76,7 @@
         <% if @custom_fields.any? %>
           <tr class="group open">
             <td>
-              <span class="expander icon icon-expended" onclick="toggleRowGroup(this);">&nbsp;</span>
+              <span class="expander icon icon-expanded" onclick="toggleRowGroup(this);"><%= sprite_icon("angle-down") %></span>
               <%= l(:label_custom_field_plural) %>
             </td>
             <td colspan="<%= (role_size - 1) %>">
